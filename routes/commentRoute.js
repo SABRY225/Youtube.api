@@ -1,0 +1,105 @@
+const express = require('express');
+const router = express.Router();
+const { getComments, getComment, createComment, editComment, deleteComment } = require('../controllers/commentController');
+const isAuth = require('../middleware/auth');
+
+/**
+ * @swagger
+ * /api/comment/{videoId}:
+ *   get:
+ *     summary: Returns the list of all Comments
+ *     tags: [Comment]
+ *     responses:
+ *       200:
+ *         description: The list of categories
+ */
+router.get('/:videoId', getComments);
+
+/**
+ * @swagger
+ * /api/comments/{commentId}:
+ *   get:
+ *     summary: Returns detailes of Comment
+ *     tags: [Comment]
+ *     parameters:
+ *       - name: commentId
+ *         in: path
+ *         required: true
+ *         description: ID of the business to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Returns detailes of Category
+ */
+router.get('/:commentId', getComment);
+
+/**
+ * @swagger
+ * /api/comment/{userId}/{videoId}:
+ *   post:
+ *     summary: Create a new comment
+ *     tags: [Comment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Comment created successfully
+ */
+router.post('/:userId/:videoId', isAuth,createComment);
+
+/**
+ * @swagger
+ * /api/comment/{commentId}:
+ *   put:
+ *     summary: edit category
+ *     tags: [Comment]
+ *     parameters:
+ *       - name: commentId
+ *         in: path
+ *         required: true
+ *         description: ID of the business to retrieve
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Category edit successfully
+ */
+router.put('/:commentId', isAuth,editComment);
+
+/**
+ * @swagger
+ * /api/comment/{commentId}:
+ *   delete:
+ *     summary: delete category
+ *     tags: [Comment]
+ *     parameters:
+ *       - name: commentId
+ *         in: path
+ *         required: true
+ *         description: ID of the business to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: Category delete successfully
+ */
+router.delete('/:commentId', isAuth,deleteComment);
+
+module.exports = router;
