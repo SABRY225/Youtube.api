@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const likeController = require('../controllers/likeController');
+const likeCommentController = require('../controllers/likeCommentController');
 
 /**
  * @swagger
  * tags:
- *   name: Like
+ *   name: LikeComment
  */
 
 /**
  * @swagger
- * /api/like:
+ * /api/likeComment:
  *   post:
- *     summary: Like or dislike a video
- *     tags: [Like]
+ *     summary: Like or dislike a comment
+ *     tags: [LikeComment]
  *     requestBody:
  *       required: true
  *       content:
@@ -27,47 +27,47 @@ const likeController = require('../controllers/likeController');
  *                 description: Whether it's a Like or DisLike
  *               userId:
  *                 type: string
- *                 description: ID of the user liking/disliking the video
- *               videoId:
+ *                 description: ID of the user liking/disliking the comment
+ *               commentId:
  *                 type: string
- *                 description: ID of the video being liked/disliked
+ *                 description: ID of the comment being liked/disliked
  *     responses:
  *       201:
  *         description: Like/Dislike created successfully
  *       400:
- *         description: User has already liked/disliked this video
+ *         description: User has already liked/disliked this comment
  *       500:
  *         description: Server error
  */
-router.post('/', likeController.createLike);
+router.post('/', likeCommentController.createLikeComment);
 
 /**
  * @swagger
- * /api/like/{videoId}:
+ * /api/likeComment/{commentId}:
  *   get:
- *     summary: Get all likes/dislikes for a video
- *     tags: [Like]
+ *     summary: Get all likes/dislikes for a comment
+ *     tags: [LikeComment]
  *     parameters:
  *       - in: path
- *         name: videoId
+ *         name: commentId
  *         required: true
  *         schema:
  *           type: string
- *           description: ID of the video
+ *           description: ID of the comment
  *     responses:
  *       200:
  *         description: List of likes/dislikes
  *       500:
  *         description: Server error
  */
-router.get('/:videoId', likeController.getLikes);
+router.get('/:commentId', likeCommentController.getLikesComments);
 
 /**
  * @swagger
- * /api/like/{id}:
+ * /api/likeComment/{id}:
  *   delete:
  *     summary: Delete a like/dislike by ID
- *     tags: [Like]
+ *     tags: [LikeComment]
  *     parameters:
  *       - in: path
  *         name: id
@@ -83,6 +83,6 @@ router.get('/:videoId', likeController.getLikes);
  *       500:
  *         description: Server error
  */
-router.delete('/:id', likeController.deleteLike);
+router.delete('/:id', likeCommentController.deleteLikeComment);
 
 module.exports = router;

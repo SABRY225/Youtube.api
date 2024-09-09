@@ -6,7 +6,6 @@ const likeSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['Like', 'DisLike']
-
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

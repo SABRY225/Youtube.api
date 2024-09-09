@@ -10,7 +10,13 @@ const playlistSchema = new mongoose.Schema({
         default: Date.now,
     },
     videosId: {
-        type: [String],  
+        type: [mongoose.Schema.Types.ObjectId],  
+        ref: 'Video',
+        required: true
+    },
+    userId: {
+        type: [mongoose.Schema.Types.ObjectId],  
+        ref: 'User',
         required: true
     },
 });

@@ -54,8 +54,6 @@ router.post('/login', login);
  *                 type: string
  *               country:
  *                 type: string
- *               profilePicture:
- *                 type: string
  *               email:
  *                 type: string
  *                 format: email
