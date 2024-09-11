@@ -106,9 +106,9 @@ const forgetPassword = async (req, res, next) => {
         user.password = hashedPassword;
         await user.save();
 
-        res.status(200).json({ message: 'Password updated successfully.' });
+        res.status(200).json({ message: 'Password updated successfully.' ,success:true});
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: 'Error updating password.', success: false });
     }
 };
 
