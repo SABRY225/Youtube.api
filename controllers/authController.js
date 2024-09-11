@@ -84,9 +84,9 @@ const login = async (req, res, next) => {
 
 // Forget password
 const forgetPassword = async (req, res, next) => {
-    const { email, Otp, newPassword } = req.body;
+    const { email, otp, newPassword } = req.body;
 
-    if (!email || !Otp || !newPassword) {
+    if (!email || !otp || !newPassword) {
         return res.status(400).json({ message: 'Please provide email, OTP, and new password.' });
     }
 
@@ -96,7 +96,7 @@ const forgetPassword = async (req, res, next) => {
             return res.status(404).json({ message: 'User not found.' });
         }
 
-        const otpRecords = await OTP.findOne({ Otp }).sort({ createdAt: -1 }).limit(1);
+        const otpRecords = await OTP.findOne({ otp }).sort({ createdAt: -1 }).limit(1);
         console.log(otpRecords);
         if (otpRecords === null) {
             return res.status(400).json({ message: 'Invalid OTP.' });

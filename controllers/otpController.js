@@ -45,7 +45,7 @@ const verifyOTP = async (req, res, next) => {
         // OTP is valid
         res.status(200).json({ success: true, message: 'OTP verification successful' });
       } else {
-        res.status(404).json({ success: false, error: 'User not found' });
+        res.status(404).json({ success: false, message: 'OTP not successful' });
       }
     } else {
       // OTP is invalid
