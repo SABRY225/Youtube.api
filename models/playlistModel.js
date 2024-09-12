@@ -12,7 +12,7 @@ const playlistSchema = new mongoose.Schema({
     videosId: {
         type: [mongoose.Schema.Types.ObjectId],  
         ref: 'Video',
-        required: true
+        required: false
     },
     userId: {
         type: [mongoose.Schema.Types.ObjectId],  

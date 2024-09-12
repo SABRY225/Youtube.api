@@ -5,6 +5,10 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    backImgVideoUrl: {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
         required: true

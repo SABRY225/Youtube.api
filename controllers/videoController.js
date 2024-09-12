@@ -1,4 +1,5 @@
 const Video = require('../models/videoModel');
+const Playlist = require('../models/playlistModel');
 
 // Get all videos
 const getVideos = async (req, res) => {
@@ -26,9 +27,9 @@ const getVideo = async (req, res) => {
 
 // Create a new video
 const createVideo = async (req, res) => {
-    const { title, description, thumbnailPath, views, uploadDate, userId, categoryId } = req.body;
+    const { title, description,videoUrl,backImgVideoUrl, userId, categoryId } = req.body;
     try {
-        const newVideo = new Video({ title, description, thumbnailPath, views, uploadDate, userId, categoryId });
+        const newVideo = new Video({ title, description,videoUrl,backImgVideoUrl, userId, categoryId  });
         await newVideo.save();
         res.status(201).json(newVideo);
     } catch (error) {
@@ -39,11 +40,11 @@ const createVideo = async (req, res) => {
 // Update a video by ID
 const updateVideo = async (req, res) => {
     const { videoId } = req.params;
-    const { title, description, thumbnailPath, views, uploadDate, userId, categoryId } = req.body;
+    const { title, description,videoUrl,backImgVideoUrl, categoryId} = req.body;
     try {
         const updatedVideo = await Video.findByIdAndUpdate(
             videoId,
-            { title, description, thumbnailPath, views, uploadDate, userId, categoryId },
+            {  title, description,videoUrl,backImgVideoUrl, categoryId},
             { new: true }
         ).populate('userId').populate('categoryId');
         if (!updatedVideo) {
@@ -68,6 +69,21 @@ const deleteVideo = async (req, res) => {
         res.status(500).json({ message: 'Error deleting video', error });
     }
 };
+// Delete a video by ID
+const assignVideo = async (req, res) => {
+    try {
+        const playlist = await Playlist.findById(req.params.playlistId);
+        const video = await Video.findById(req.params.videoId);
+        if (!playlist || !video) {
+            return res.status(404).json({ message: 'Playlist or Video not found' });
+        }
+        playlist.videosId.push(video._id);
+        await playlist.save();
+        res.json(playlist);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
 module.exports = {
     getVideos,
@@ -75,4 +91,5 @@ module.exports = {
     createVideo,
     updateVideo,
     deleteVideo,
+    assignVideo
 };

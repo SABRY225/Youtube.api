@@ -3,7 +3,6 @@ const Playlist = require('../models/playlistModel');
 // Get all playlists
 const getPlaylists = async (req, res) => {
     try {
-        
         const playlists = await Playlist.find(req.userId);
         res.status(200).json(playlists);
     } catch (error) {
@@ -27,9 +26,10 @@ const getPlaylist = async (req, res) => {
 
 // Create a new playlist
 const createPlaylist = async (req, res) => {
-    const { name, videosId } = req.body;
+    const userId = re.userId
+    const { name } = req.body;
     try {
-        const newPlaylist = new Playlist({ name, videosId });
+        const newPlaylist = new Playlist({ name,userId });
         await newPlaylist.save();
         res.status(201).json(newPlaylist);
     } catch (error) {
