@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getVideos, getVideo, createVideo, updateVideo, deleteVideo, assginVideo } = require('../controllers/videoController');
+const { getVideos, getVideo, createVideo, updateVideo, deleteVideo, assignVideo } = require('../controllers/videoController');
 const isAuth = require('../middleware/auth');
 
 /**
@@ -140,7 +140,6 @@ router.delete('/:videoId', isAuth, deleteVideo);
  *         description: ID of the video 
  *         schema:
  *           type: string
- *     parameters:
  *       - name: playlistId
  *         in: path
  *         required: true
