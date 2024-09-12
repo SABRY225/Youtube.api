@@ -42,7 +42,7 @@ app.use('/api/comment', require('./routes/commentRoute'));
 app.use('/api/playlist', require('./routes/playlistRoute'));
 app.use('/api/video', require('./routes/videoRoute'));
 app.use('/api/user', require('./routes/userRoute'));
-app.use('/api/subscription', require('./routes/subscriptionRoute'));
+app.use('/api/subscriptions', require('./routes/subscriptionRoute'));
 app.use('/api/likeComment', require('./routes/likeCommentRoute'));
 app.use('/api/like', require('./routes/likeRoute'));
 

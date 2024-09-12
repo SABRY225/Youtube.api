@@ -20,7 +20,8 @@ const options = {
         },
         servers: [
             {
-                url: "https://youtubeplatformapi-production.up.railway.app"
+                // url: "https://youtubeplatformapi-production.up.railway.app"
+                url: "http://localhost:3000/"
             }
         ],
         security: [

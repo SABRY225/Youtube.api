@@ -17,9 +17,9 @@ const createSubscription = async (req, res) => {
     // Save the instance to the database
     const savedSubscription = await newSubscription.save();
 
-    res.status(201).json(savedSubscription);
+    res.status(201).json({ message: 'subscription user successfully', success: true  });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, success: false  });
   }
 };
 
@@ -31,9 +31,19 @@ const getSubscriptions = async (req, res) => {
     // Find all subscriptions for a specific subscriber
     const subscriptions = await Subscription.find({ subscriberID }).populate('subscribedToID');
 
-    res.status(200).json(subscriptions);
+    // res.status(200).json(subscriptions);
+    const formattedSubscriptions = subscriptions
+    .filter(user => user.subscribedToID.role !== 'Admin') // Filter out users with 'Admin' role
+    .map(user => ({
+      id: user.subscribedToID._id,
+      role: user.subscribedToID.role,
+      userName: user.subscribedToID.userName,
+      profilePicture: user.subscribedToID.profilePicture,
+    }));
+
+  res.status(200).json(formattedSubscriptions);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message , success: false });
   }
 };
 

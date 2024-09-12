@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, getUser, updateUser, deleteUser } = require('../controllers/userController');
+const { getUsers, getUser, updateUser, deleteUser, getCounts } = require('../controllers/userController');
 const isAuth = require('../middleware/auth');
 
 /**
@@ -29,6 +29,18 @@ router.get('/current-user',isAuth, getUser);
 
 /**
  * @swagger
+ * /api/user/Counts:
+ *   get:
+ *     summary: Returns count of User and Video and Playlist
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Returns count of User and Video and Playlist
+ */
+router.get('/counts',isAuth, getCounts);
+
+/**
+ * @swagger
  * /api/user/{userId}:
  *   put:
  *     summary: Update an existing User
@@ -52,11 +64,9 @@ router.get('/current-user',isAuth, getUser);
  *               dateOfBirth:
  *                 type: string
  *                 format: date
- *               email:
- *                 type: string
- *               password:
- *                 type: string
  *               profilePicture:
+ *                 type: string
+ *               backgroundUser:
  *                 type: string
  *               country:
  *                 type: string
