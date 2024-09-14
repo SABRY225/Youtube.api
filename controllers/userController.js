@@ -1,4 +1,6 @@
 const User = require('../models/userModel');
+const Video = require('../models/videoModel');
+const Playlist = require('../models/playlistModel');
 
 // Get all users
 const getUsers = async (req, res) => {
@@ -17,6 +19,7 @@ const getUsers = async (req, res) => {
             userName: user.userName,
             email: user.email,
             profilePicture: user.profilePicture,
+            backgroundUser:user.backgroundUser,
             dateOfBirth: user.dateOfBirth,
             country: user.country
         }));
@@ -45,10 +48,9 @@ const getUser = async (req, res) => {
 
 // Update a user by ID
 const updateUser = async (req, res) => {
-    const { userId } = req.params;
     const { userName, dateOfBirth, profilePicture, country ,backgroundUser} = req.body;
     try {
-        const user = await User.findById(userId);
+        const user = await User.findById(req.userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -92,8 +94,7 @@ const getCounts = async (req, res) => {
         res.status(200).json({
             userCount,
             videoCount,
-            playlistCount,
-            success: true,
+            playlistCount
         });
     } catch (error) {
         // Handle errors

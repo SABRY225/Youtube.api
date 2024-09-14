@@ -27,11 +27,13 @@ const getVideo = async (req, res) => {
 
 // Create a new video
 const createVideo = async (req, res) => {
-    const { title, description,videoUrl,backImgVideoUrl, userId, categoryId } = req.body;
+    const {categoryId}=req.params
+    const userId=req.userId
+    const { title, description,videoUrl,backImgVideoUrl } = req.body;
     try {
         const newVideo = new Video({ title, description,videoUrl,backImgVideoUrl, userId, categoryId  });
         await newVideo.save();
-        res.status(201).json(newVideo);
+        res.status(201).json({ message: 'creating video successfully',success: true });
     } catch (error) {
         res.status(400).json({ message: 'Error creating video', error });
     }

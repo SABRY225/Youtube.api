@@ -41,17 +41,10 @@ router.get('/counts',isAuth, getCounts);
 
 /**
  * @swagger
- * /api/user/{userId}:
+ * /api/user/:
  *   put:
  *     summary: Update an existing User
  *     tags: [User]
- *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         description: ID of the user to update
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -74,7 +67,7 @@ router.get('/counts',isAuth, getCounts);
  *       200:
  *         description: User updated successfully
  */
-router.put('/:userId', isAuth, updateUser);
+router.put('/', isAuth, updateUser);
 
 /**
  * @swagger

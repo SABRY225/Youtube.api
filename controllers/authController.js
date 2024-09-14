@@ -70,7 +70,7 @@ const login = async (req, res, next) => {
         }
         // Generate JWT token
         const tokenData = { userId: user._id };
-        const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         let Role = user.role || "";
 

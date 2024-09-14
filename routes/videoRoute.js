@@ -36,17 +36,11 @@ router.get('/:videoId', getVideo);
 
 /**
  * @swagger
- * /api/video/{categoryId}/{userId}:
+ * /api/video/{categoryId}:
  *   post:
  *     summary: Create a new Video
  *     tags: [Video]
  *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         description: ID of the user to create
- *         schema:
- *           type: string
  *       - name: categoryId
  *         in: path
  *         required: true
@@ -72,7 +66,7 @@ router.get('/:videoId', getVideo);
  *       201:
  *         description: Video created successfully
  */
-router.post('/:categoryId/:userId', isAuth, createVideo);
+router.post('/:categoryId', isAuth, createVideo);
 
 /**
  * @swagger

@@ -39,24 +39,17 @@ router.post('/', subscriptionController.createSubscription);
 
 /**
  * @swagger
- * /api/subscriptions/{subscriberID}:
+ * /api/subscriptions:
  *   get:
  *     summary: Get all subscriptions for a user
  *     tags: [Subscription]
- *     parameters:
- *       - in: path
- *         name: subscriberID
- *         required: true
- *         schema:
- *           type: string
- *           description: ID of the subscriber
  *     responses:
  *       200:
  *         description: List of subscriptions
  *       500:
  *         description: Server error
  */
-router.get('/:subscriberID', subscriptionController.getSubscriptions);
+router.get('/', subscriptionController.getSubscriptions);
 
 /**
  * @swagger

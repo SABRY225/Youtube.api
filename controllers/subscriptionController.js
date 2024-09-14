@@ -26,14 +26,14 @@ const createSubscription = async (req, res) => {
 // Get all subscriptions for a specific user (who they are subscribed to)
 const getSubscriptions = async (req, res) => {
   try {
-    const { subscriberID } = req.params;
+    // const { subscriberID } = req.userId;
 
     // Find all subscriptions for a specific subscriber
-    const subscriptions = await Subscription.find({ subscriberID }).populate('subscribedToID');
+    const subscriptions = await Subscription.find({ subscriberID:req.userId }).populate('subscribedToID');
 
     // res.status(200).json(subscriptions);
     const formattedSubscriptions = subscriptions
-    .filter(user => user.subscribedToID.role !== 'Admin') // Filter out users with 'Admin' role
+    .filter(user => user.subscribedToID.role !== 'Admin')
     .map(user => ({
       id: user.subscribedToID._id,
       role: user.subscribedToID.role,
