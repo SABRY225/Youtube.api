@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const subscriptionController = require('../controllers/subscriptionController');
+const isAuth = require('../middleware/auth');
 
 /**
  * @swagger
@@ -35,7 +36,7 @@ const subscriptionController = require('../controllers/subscriptionController');
  *       500:
  *         description: Server error
  */
-router.post('/', subscriptionController.createSubscription);
+router.post('/', isAuth,subscriptionController.createSubscription);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', subscriptionController.createSubscription);
  *       500:
  *         description: Server error
  */
-router.get('/:subscriberID', subscriptionController.getSubscriptions);
+router.get('/:subscriberID',isAuth, subscriptionController.getSubscriptions);
 
 /**
  * @swagger
@@ -84,6 +85,6 @@ router.get('/:subscriberID', subscriptionController.getSubscriptions);
  *       500:
  *         description: Server error
  */
-router.delete('/:subscriberID/:subscribedToID', subscriptionController.deleteSubscription);
+router.delete('/:subscriberID/:subscribedToID',isAuth, subscriptionController.deleteSubscription);
 
 module.exports = router;

@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const { getVideos, getVideo, createVideo, updateVideo, deleteVideo, assignVideo } = require('../controllers/videoController');
+const { getVideos, getVideo, createVideo, updateVideo, deleteVideo, assignVideo, getAllVideos } = require('../controllers/videoController');
 const isAuth = require('../middleware/auth');
+
+/**
+ * @swagger
+ * /api/video/:
+ *   get:
+ *     summary: Returns the list of all Videos
+ *     tags: [Video]
+ *     responses:
+ *       200:
+ *         description: The list of videos
+ */
+router.get('/',isAuth, getAllVideos);
 
 /**
  * @swagger
  * /api/video/videos/{userId}:
  *   get:
- *     summary: Returns the list of all Videos
+ *     summary: Returns the list of all Videos by user 
  *     tags: [Video]
  *     parameters:
  *       - name: userId
@@ -20,7 +32,7 @@ const isAuth = require('../middleware/auth');
  *       200:
  *         description: The list of videos
  */
-router.get('/videos/:userId', getVideos);
+router.get('/videos/:userId',isAuth, getVideos);
 
 /**
  * @swagger
@@ -39,7 +51,7 @@ router.get('/videos/:userId', getVideos);
  *       200:
  *         description: Returns details of the video
  */
-router.get('/:videoId', getVideo);
+router.get('/:videoId',isAuth, getVideo);
 
 /**
  * @swagger
@@ -131,7 +143,7 @@ router.delete('/:videoId', isAuth, deleteVideo);
 /**
  * @swagger
  * /api/video/{playlistId}/{videoId}:
- *   delete:
+ *   post:
  *     summary: assgin a Video to Playlist
  *     tags: [Video]
  *     parameters:

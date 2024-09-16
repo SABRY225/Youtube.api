@@ -45,6 +45,7 @@ app.use('/api/user', require('./routes/userRoute'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoute'));
 app.use('/api/likeComment', require('./routes/likeCommentRoute'));
 app.use('/api/like', require('./routes/likeRoute'));
+app.use('/api/save', require('./routes/saveRoute'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

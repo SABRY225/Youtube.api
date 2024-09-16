@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPlaylists, getPlaylist, createPlaylist, updatePlaylist, deletePlaylist } = require('../controllers/playlistController');
+const { getPlaylists, getPlaylist, createPlaylist, updatePlaylist, deletePlaylist, getPlaylistsByImgVideo } = require('../controllers/playlistController');
 const isAuth = require('../middleware/auth');
 
 /**
@@ -13,7 +13,26 @@ const isAuth = require('../middleware/auth');
  *       200:
  *         description: The list of playlists
  */
-router.get('/', getPlaylists);
+router.get('/', isAuth,getPlaylists);
+
+/**
+ * @swagger
+ * /api/playlist/playlistsByImgVideo/{userId}:
+ *   get:
+ *     summary: Returns the list of all playlistsByImgVideo
+ *     tags: [Playlist]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The list of playlists
+ */
+router.get('/playlistsByImgVideo/:userId', isAuth,getPlaylistsByImgVideo);
 
 /**
  * @swagger
@@ -32,7 +51,7 @@ router.get('/', getPlaylists);
  *       200:
  *         description: Returns details of the playlist
  */
-router.get('/:playlistId', getPlaylist);
+router.get('/:playlistId', isAuth,getPlaylist);
 
 /**
  * @swagger

@@ -1,11 +1,30 @@
 const Video = require('../models/videoModel');
 const Playlist = require('../models/playlistModel');
 
-// Get all videos
+// Get all videos by user id
 const getVideos = async (req, res) => {
     try {
         
         const videos = await Video.find({userId:req.params.userId}).populate('userId').populate('categoryId');
+        res.status(200).json(videos.map(video => ({
+            id: video._id,
+            videoUrl: video.videoUrl,
+            backImgVideoUrl: video.backImgVideoUrl,
+            title: video.title,
+            views:video.views,
+            userName: video.userId.userName,
+            userId: video.userId._id,
+            profilePicture: video.userId.profilePicture,
+            categoryName:video.categoryId.name
+        })));
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching videos', error });
+    }
+};
+
+const getAllVideos = async (req, res) => {
+    try {
+        const videos = await Video.find().populate('userId').populate('categoryId');
         res.status(200).json(videos.map(video => ({
             id: video._id,
             videoUrl: video.videoUrl,
@@ -46,7 +65,7 @@ const createVideo = async (req, res) => {
         await newVideo.save();
         res.status(201).json({ message: 'creating video successfully',success: true });
     } catch (error) {
-        res.status(400).json({ message: 'Error creating video', error });
+        res.status(400).json({ message: 'Error creating video', success: false });
     }
 };
 
@@ -82,19 +101,34 @@ const deleteVideo = async (req, res) => {
         res.status(500).json({ message: 'Error deleting video', error });
     }
 };
-// Delete a video by ID
+// assign a video by ID
 const assignVideo = async (req, res) => {
     try {
+        // Find the playlist and video by their respective IDs
         const playlist = await Playlist.findById(req.params.playlistId);
         const video = await Video.findById(req.params.videoId);
+
+        // Check if playlist or video exists
         if (!playlist || !video) {
             return res.status(404).json({ message: 'Playlist or Video not found' });
         }
+
+        // Check if the video already exists in the playlist
+        const videoExists = playlist.videosId.includes(video._id);
+        if (videoExists) {
+            return res.status(400).json({ message: 'Video already exists in the playlist' });
+        }
+
+        // Add video to the playlist and save the playlist
         playlist.videosId.push(video._id);
         await playlist.save();
-        res.json(playlist);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+
+        // Return the updated playlist
+        return res.status(200).json({ message: `Video assign to the playlist ${playlist.name}` });
+
+    } catch (error) {
+        // Catch and return any errors
+        return res.status(500).json({ message: 'Error assigning video', error: error.message });
     }
 };
 
@@ -104,5 +138,6 @@ module.exports = {
     createVideo,
     updateVideo,
     deleteVideo,
-    assignVideo
+    assignVideo,
+    getAllVideos
 };
