@@ -4,8 +4,19 @@ const Playlist = require('../models/playlistModel');
 // Get all videos
 const getVideos = async (req, res) => {
     try {
-        const videos = await Video.find().populate('userId').populate('categoryId');
-        res.status(200).json(videos);
+        
+        const videos = await Video.find({userId:req.params.userId}).populate('userId').populate('categoryId');
+        res.status(200).json(videos.map(video => ({
+            id: video._id,
+            videoUrl: video.videoUrl,
+            backImgVideoUrl: video.backImgVideoUrl,
+            title: video.title,
+            views:video.views,
+            userName: video.userId.userName,
+            userId: video.userId._id,
+            profilePicture: video.userId.profilePicture,
+            categoryName:video.categoryId.name
+        })));
     } catch (error) {
         res.status(500).json({ message: 'Error fetching videos', error });
     }

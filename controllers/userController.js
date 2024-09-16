@@ -4,32 +4,26 @@ const Playlist = require('../models/playlistModel');
 
 // Get all users
 const getUsers = async (req, res) => {
+    const userId = req.userId;
     try {
-        const users = await User.find();
-
-        // If there are no users
-        if (!users || users.length === 0) {
-            return res.status(404).json({ message: 'No users found', success: false });
+        const users = await User.find({ _id: { $ne: userId }, role: { $ne: 'Admin' } });
+        if (!users.length) {
+            return res.status(404).json({ message: 'No users found' });
         }
-
-        // Format the response for each user
-        const formattedUsers = users.map(user => ({
+        res.status(200).json(users.map(user => ({
             id: user._id,
             role: user.role,
             userName: user.userName,
             email: user.email,
             profilePicture: user.profilePicture,
-            backgroundUser:user.backgroundUser,
             dateOfBirth: user.dateOfBirth,
             country: user.country
-        }));
-
-        res.status(200).json(formattedUsers);
+        })));
     } catch (error) {
-        console.error("Error fetching users:", error); // Log error for debugging
-        res.status(500).json({ message: 'Error fetching users', success: false });
+        res.status(500).json({ message: 'Error fetching users', error });
     }
 };
+
 
 
 // Get a specific user by ID
@@ -40,7 +34,7 @@ const getUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.status(200).json({id:user._id,role:user.role,userName:user.userName,email:user.email,profilePicture:user.profilePicture,dateOfBirth:user.dateOfBirth,country:user.country});
+        res.status(200).json({id:user._id,role:user.role,userName:user.userName,email:user.email,profilePicture:user.profilePicture,dateOfBirth:user.dateOfBirth,country:user.country,backgroundUser:user.backgroundUser});
     } catch (error) {
         res.status(500).json({ message: 'Error fetching user', error });
     }

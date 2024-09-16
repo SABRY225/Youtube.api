@@ -49,10 +49,6 @@ router.get('/:playlistId', getPlaylist);
  *             properties:
  *               name:
  *                 type: string
- *               videosId:
- *                 type: array
- *                 items:
- *                   type: string
  *     responses:
  *       201:
  *         description: Playlist created successfully

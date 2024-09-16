@@ -19,11 +19,12 @@ const videoSchema = new mongoose.Schema({
     },
     thumbnailPath: {
         type: String,
-        required: true,
+        required: false,
     },
     views: {
         type: Number,  // Changed to Number for views
-        required: false
+        required: false,
+        default:0
     },
     uploadDate: {
         type: Date,

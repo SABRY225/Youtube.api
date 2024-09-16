@@ -26,14 +26,14 @@ const getPlaylist = async (req, res) => {
 
 // Create a new playlist
 const createPlaylist = async (req, res) => {
-    const userId = re.userId
+    const userId = req.userId
     const { name } = req.body;
     try {
         const newPlaylist = new Playlist({ name,userId });
         await newPlaylist.save();
-        res.status(201).json(newPlaylist);
+        res.status(201).json({ message: 'creating playlist successfully',success: true  });
     } catch (error) {
-        res.status(400).json({ message: 'Error creating playlist', error });
+        res.status(400).json({ message: 'Error creating playlist',success: false });
     }
 };
 

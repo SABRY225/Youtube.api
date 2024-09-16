@@ -26,26 +26,25 @@ const createSubscription = async (req, res) => {
 // Get all subscriptions for a specific user (who they are subscribed to)
 const getSubscriptions = async (req, res) => {
   try {
-    // const { subscriberID } = req.userId;
-
     // Find all subscriptions for a specific subscriber
-    const subscriptions = await Subscription.find({ subscriberID:req.userId }).populate('subscribedToID');
+    
+    const subscriptions = await Subscription.find({ subscriberID: req.params.subscriberID }).populate('subscribedToID');
 
-    // res.status(200).json(subscriptions);
+    // Format the subscriptions and filter out 'Admin' roles
     const formattedSubscriptions = subscriptions
-    .filter(user => user.subscribedToID.role !== 'Admin')
+    .filter(user => user.subscribedToID && user.subscribedToID.role !== 'Admin')
     .map(user => ({
-      id: user.subscribedToID._id,
-      role: user.subscribedToID.role,
       userName: user.subscribedToID.userName,
       profilePicture: user.subscribedToID.profilePicture,
     }));
 
-  res.status(200).json(formattedSubscriptions);
+    // Send the formatted subscriptions in the response
+    res.status(200).json(formattedSubscriptions);
   } catch (error) {
-    res.status(500).json({ message: error.message , success: false });
+    res.status(500).json({ message: error.message, success: false });
   }
 };
+
 
 // Unsubscribe by ID (remove a subscription)
 const deleteSubscription = async (req, res) => {

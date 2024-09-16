@@ -5,15 +5,22 @@ const isAuth = require('../middleware/auth');
 
 /**
  * @swagger
- * /api/video/:
+ * /api/video/videos/{userId}:
  *   get:
  *     summary: Returns the list of all Videos
  *     tags: [Video]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user to retrieve
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: The list of videos
  */
-router.get('/', getVideos);
+router.get('/videos/:userId', getVideos);
 
 /**
  * @swagger
