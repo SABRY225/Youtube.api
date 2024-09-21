@@ -8,14 +8,14 @@ const createSubscription = async (req, res) => {
     // Check if the subscription already exists
     const existingSubscription = await Subscription.findOne({ subscriberID, subscribedToID });
     if (existingSubscription) {
-      return res.status(400).json({ message: 'Subscription already exists.' });
+      return res.status(400).json({ message: 'Subscription already exists.',success:false });
     }
 
     // Create a new Subscription instance
     const newSubscription = new Subscription({ subscriberID, subscribedToID });
 
     // Save the instance to the database
-    const savedSubscription = await newSubscription.save();
+    await newSubscription.save();
 
     res.status(201).json({ message: 'subscription user successfully', success: true  });
   } catch (error) {
@@ -55,17 +55,35 @@ const deleteSubscription = async (req, res) => {
     const deletedSubscription = await Subscription.findByIdAndDelete(subscriberID, subscribedToID);
 
     if (!deletedSubscription) {
-      return res.status(404).json({ message: 'Subscription not found' });
+      return res.status(404).json({ message: 'Subscription not found',success:false });
     }
 
-    res.status(200).json({ message: 'Unsubscribed successfully' });
+    res.status(200).json({ message: 'Unsubscribed successfully' ,success:true});
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message ,success:false});
   }
 };
 
+const checkSubscription=async (req, res) => {
+  try {
+  const { subscriberID, subscribedToID } = req.params;
+  const subscribe=await Subscription.find({subscriberID,subscribedToID})
+  if(subscriberID===subscribedToID ){
+    res.status(200).json({isSubscribe:'MyChannel'});
+  }
+  else if (subscribe.length>0) {
+  res.status(200).json({isSubscribe:'Subscribed'});
+  }else {
+    res.status(200).json({isSubscribe:'Unsubscribed'});
+  }
+  } catch (error) {
+    res.status(500).json({ message: error.message ,success:false});
+  }
+
+}
 module.exports = {
   createSubscription,
   getSubscriptions,
-  deleteSubscription
+  deleteSubscription,
+  checkSubscription
 };

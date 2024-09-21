@@ -9,6 +9,13 @@ const isAuth = require('../middleware/auth');
  *   get:
  *     summary: Returns the list of all Comments
  *     tags: [Comment]
+ *     parameters:
+ *       - name: videoId
+ *         in: path
+ *         required: true
+ *         description: ID of the business to retrieve
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: The list of categories
@@ -36,10 +43,17 @@ router.get('/:commentId', getComment);
 
 /**
  * @swagger
- * /api/comment/{userId}/{videoId}:
+ * /api/comment/{videoId}:
  *   post:
  *     summary: Create a new comment
  *     tags: [Comment]
+ *     parameters:
+ *       - name: videoId
+ *         in: path
+ *         required: true
+ *         description: ID of the business to retrieve
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -53,7 +67,7 @@ router.get('/:commentId', getComment);
  *       201:
  *         description: Comment created successfully
  */
-router.post('/:userId/:videoId', isAuth,createComment);
+router.post('/:videoId', isAuth,createComment);
 
 /**
  * @swagger

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const likeCommentController = require('../controllers/likeCommentController');
+const isAuth = require('../middleware/auth');
 
 /**
  * @swagger
@@ -25,9 +26,6 @@ const likeCommentController = require('../controllers/likeCommentController');
  *                 type: string
  *                 enum: ['Like', 'DisLike']
  *                 description: Whether it's a Like or DisLike
- *               userId:
- *                 type: string
- *                 description: ID of the user liking/disliking the comment
  *               commentId:
  *                 type: string
  *                 description: ID of the comment being liked/disliked
@@ -39,7 +37,7 @@ const likeCommentController = require('../controllers/likeCommentController');
  *       500:
  *         description: Server error
  */
-router.post('/', likeCommentController.createLikeComment);
+router.post('/', isAuth,likeCommentController.createLikeComment);
 
 /**
  * @swagger
@@ -60,7 +58,28 @@ router.post('/', likeCommentController.createLikeComment);
  *       500:
  *         description: Server error
  */
-router.get('/:commentId', likeCommentController.getLikesComments);
+router.get('/:commentId',isAuth, likeCommentController.getLikesComments);
+
+/**
+ * @swagger
+ * /api/likeComment/check/{commentId}:
+ *   get:
+ *     summary: Get all likes/dislikes for a comment
+ *     tags: [LikeComment]
+ *     parameters:
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: ID of the comment
+ *     responses:
+ *       200:
+ *         description: List of likes/dislikes
+ *       500:
+ *         description: Server error
+ */
+router.get('/check/:commentId',isAuth, likeCommentController.checkLikeComment);
 
 /**
  * @swagger

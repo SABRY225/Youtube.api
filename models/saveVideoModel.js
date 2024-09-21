@@ -4,10 +4,13 @@ const saveVideoSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        require:true
     },
-    VideoId: {
+    videoId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Video',
+        require:true
+
     },
 }, {
     timestamps: true

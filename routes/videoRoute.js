@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getVideos, getVideo, createVideo, updateVideo, deleteVideo, assignVideo, getAllVideos } = require('../controllers/videoController');
+const { getVideos, getVideo, createVideo, updateVideo,addViewVideo, deleteVideo, assignVideo, getAllVideos } = require('../controllers/videoController');
 const isAuth = require('../middleware/auth');
 
 /**
@@ -120,6 +120,26 @@ router.post('/:categoryId', isAuth, createVideo);
  *         description: Video updated successfully
  */
 router.put('/:videoId', isAuth, updateVideo);
+
+/**
+ * @swagger
+ * /api/video/view/{videoId}:
+ *   put:
+ *     summary: Update an existing Video
+ *     tags: [Video]
+ *     parameters:
+ *       - name: videoId
+ *         in: path
+ *         required: true
+ *         description: ID of the video to update
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Video view update successfully
+ */
+router.put('/view/:videoId', isAuth, addViewVideo);
+
 
 /**
  * @swagger

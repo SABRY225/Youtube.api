@@ -87,4 +87,34 @@ router.get('/:subscriberID',isAuth, subscriptionController.getSubscriptions);
  */
 router.delete('/:subscriberID/:subscribedToID',isAuth, subscriptionController.deleteSubscription);
 
+
+/**
+ * @swagger
+ * /api/subscriptions/{subscriberID}/{subscribedToID}:
+ *   get:
+ *     tags: [Subscription]
+ *     parameters:
+ *       - in: path
+ *         name: subscriberID
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: Subscription subscriberID to delete
+ *       - in: path
+ *         name: subscribedToID
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: Subscription subscribedToID to delete
+ *     responses:
+ *       200:
+ *         description: check subscription successfully
+ *       404:
+ *         description: Subscription not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/:subscriberID/:subscribedToID',isAuth, subscriptionController.checkSubscription);
+
+
 module.exports = router;

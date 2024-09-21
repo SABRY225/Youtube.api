@@ -4,8 +4,14 @@ const Comment = require('../models/commentModel');
 const getComments = async (req, res) => {
     const { videoId } = req.params;
     try {
-        const comments = await Comment.find({ videoId });
-        res.status(200).json(comments);
+        let comments = await Comment.find({ videoId });
+        const counts=await Comment.countDocuments()
+        comments = comments.map(comment=>({
+            id:comment._id,
+            content:comment.content,
+            userId:comment.userId
+        }))
+        res.status(200).json({comments,counts});
     } catch (error) {
         res.status(500).json({ message: 'Error fetching comments', error });
     }
@@ -27,29 +33,30 @@ const getComment = async (req, res) => {
 
 // Create a new comment
 const createComment = async (req, res) => {
-    const { userId, videoId } = req.params;
-    const { content } = req.body;
     try {
+        const userId=req.userId
+        const { videoId } = req.params;
+        const { content } = req.body;
         const newComment = new Comment({ userId, videoId, content });
         await newComment.save();
-        res.status(201).json(newComment);
+        res.status(201).json({ message: 'Comment created successfully',success:true });
     } catch (error) {
-        res.status(400).json({ message: 'Error creating comment', error });
+        res.status(400).json({ message: error.message, success:false });
     }
 };
 
 // Edit an existing comment
 const editComment = async (req, res) => {
-    const { commentId } = req.params;
-    const { content } = req.body;
     try {
+        const { commentId } = req.params;
+        const { content } = req.body;
         const updatedComment = await Comment.findByIdAndUpdate(commentId, { content }, { new: true });
         if (!updatedComment) {
-            return res.status(404).json({ message: 'Comment not found' });
+            return res.status(404).json({ message: 'Comment not found',success:false  });
         }
-        res.status(201).json(updatedComment);
+        res.status(201).json({ message: 'Comment update successfully',success:true });
     } catch (error) {
-        res.status(400).json({ message: 'Error editing comment', error });
+        res.status(400).json({ message:'Error editing comment', success:false });
     }
 };
 
@@ -59,11 +66,11 @@ const deleteComment = async (req, res) => {
     try {
         const deletedComment = await Comment.findByIdAndDelete(commentId);
         if (!deletedComment) {
-            return res.status(404).json({ message: 'Comment not found' });
+            return res.status(404).json({ message: 'Comment not found',success:true });
         }
-        res.status(201).json({ message: 'Comment deleted successfully' });
+        return res.status(201).json({ message: 'Comment deleted successfully',success:true });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting comment', error });
+        return res.status(500).json({ message: error.message, success:false });
     }
 };
 

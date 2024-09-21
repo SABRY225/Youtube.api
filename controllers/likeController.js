@@ -3,23 +3,24 @@ const Like = require('../models/likeModel');
 // Create a new like/dislike for a video
 const createLike = async (req, res) => {
   try {
-    const { Type, userId, videoId } = req.body;
+    const userId=req.userId
+    const { Type, videoId } = req.body;
 
     // Check if the user has already liked/disliked the video
     const existingLike = await Like.findOne({ userId, videoId });
     if (existingLike) {
-      return res.status(400).json({ message: 'User has already liked/disliked this video.' });
+      return res.status(400).json({ message: `User has already ${existingLike.Type} this video.`,success:false });
     }
 
     // Create a new Like instance
     const newLike = new Like({ Type, userId, videoId });
 
     // Save to the database
-    const savedLike = await newLike.save();
+    await newLike.save();
 
-    res.status(201).json(savedLike);
+    res.status(201).json({ message: `add ${Type} this video.`,success:true });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message,success:true });
   }
 };
 
@@ -27,13 +28,12 @@ const createLike = async (req, res) => {
 const getLikes = async (req, res) => {
   try {
     const { videoId } = req.params;
-
     // Find all likes/dislikes for the specific video
-    const likes = await Like.find({ videoId }).populate('userId');
-
-    res.status(200).json(likes);
+    const countLike=await Like.find({ videoId }).countDocuments({Type:'Like'})
+    const countDisLike=await Like.find({ videoId }).countDocuments({Type:'DisLike'})
+    return res.status(200).json({countLike,countDisLike});
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -46,17 +46,33 @@ const deleteLike = async (req, res) => {
     const deletedLike = await Like.findByIdAndDelete(id);
 
     if (!deletedLike) {
-      return res.status(404).json({ message: 'Like/Dislike not found' });
+      return res.status(404).json({ message: 'Like/Dislike not found',success:false  });
     }
 
-    res.status(200).json({ message: 'Like/Dislike deleted successfully' });
+    res.status(200).json({ message: 'Like/Dislike deleted successfully' ,success:true });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message ,success:false  });
   }
 };
+
+const checkLike =async (req,res)=>{
+  try {
+    const userId=req.userId
+    const { videoId } = req.params;
+    const existingLike = await Like.find({ userId, videoId });
+    if (existingLike.length) {
+      return res.status(200).json({Type:existingLike.Type});
+    }else{
+      return res.status(200).json({Type:false});
+    }
+  } catch (error) {
+     res.status(500).json({ message: error.message ,success:false });
+  }
+}
 
 module.exports = {
   createLike,
   getLikes,
-  deleteLike
+  deleteLike,
+  checkLike
 };

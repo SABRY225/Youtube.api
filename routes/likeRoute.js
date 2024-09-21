@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const likeController = require('../controllers/likeController');
+const isAuth = require('../middleware/auth');
 
 /**
  * @swagger
@@ -25,9 +26,6 @@ const likeController = require('../controllers/likeController');
  *                 type: string
  *                 enum: ['Like', 'DisLike']
  *                 description: Whether it's a Like or DisLike
- *               userId:
- *                 type: string
- *                 description: ID of the user liking/disliking the video
  *               videoId:
  *                 type: string
  *                 description: ID of the video being liked/disliked
@@ -39,7 +37,7 @@ const likeController = require('../controllers/likeController');
  *       500:
  *         description: Server error
  */
-router.post('/', likeController.createLike);
+router.post('/', isAuth,likeController.createLike);
 
 /**
  * @swagger
@@ -60,7 +58,29 @@ router.post('/', likeController.createLike);
  *       500:
  *         description: Server error
  */
-router.get('/:videoId', likeController.getLikes);
+router.get('/:videoId',isAuth, likeController.getLikes);
+
+/**
+ * @swagger
+ * /api/like/check/{videoId}:
+ *   get:
+ *     summary: Get  like/dislike for a video
+ *     tags: [Like]
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: ID of the video
+ *     responses:
+ *       200:
+ *         description: check like/dislike of video
+ *       500:
+ *         description: Server error
+ */
+router.get('/check/:videoId',isAuth, likeController.checkLike);
+
 
 /**
  * @swagger
@@ -83,6 +103,6 @@ router.get('/:videoId', likeController.getLikes);
  *       500:
  *         description: Server error
  */
-router.delete('/:id', likeController.deleteLike);
+router.delete('/:id',isAuth, likeController.deleteLike);
 
 module.exports = router;
