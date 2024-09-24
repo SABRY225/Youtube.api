@@ -34,6 +34,7 @@ const getSubscriptions = async (req, res) => {
     const formattedSubscriptions = subscriptions
     .filter(user => user.subscribedToID && user.subscribedToID.role !== 'Admin')
     .map(user => ({
+      id: user.subscribedToID._id,
       userName: user.subscribedToID.userName,
       profilePicture: user.subscribedToID.profilePicture,
     }));

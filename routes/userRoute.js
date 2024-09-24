@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, getUser, updateUser, deleteUser, getCounts } = require('../controllers/userController');
+const { getUsers, getUser, updateUser, deleteUser, getCounts, getUserById } = require('../controllers/userController');
 const isAuth = require('../middleware/auth');
 
 /**
@@ -26,6 +26,27 @@ router.get('/',isAuth, getUsers);
  *         description: Returns details of the user
  */
 router.get('/current-user',isAuth, getUser);
+
+
+/**
+ * @swagger
+ * /api/user/{userId}:
+ *   get:
+ *     summary: Returns details of a specific User
+ *     tags: [User]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Returns details of the user
+ */
+router.get('/:userId',isAuth, getUserById);
+
 
 /**
  * @swagger

@@ -40,6 +40,20 @@ const getUser = async (req, res) => {
     }
 };
 
+// Get a specific user by ID
+const getUserById = async (req, res) => {
+    const  {userId}  = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(200).json({ message: 'User not found' });
+        }
+        res.status(200).json({id:user._id,role:user.role,userName:user.userName,email:user.email,profilePicture:user.profilePicture,dateOfBirth:user.dateOfBirth,country:user.country,backgroundUser:user.backgroundUser});
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching user', error });
+    }
+};
+
 // Update a user by ID
 const updateUser = async (req, res) => {
     const { userName, dateOfBirth, profilePicture, country ,backgroundUser} = req.body;
@@ -106,5 +120,6 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser,
-    getCounts
+    getCounts,
+    getUserById
 };
