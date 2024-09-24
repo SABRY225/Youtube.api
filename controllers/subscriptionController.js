@@ -52,7 +52,7 @@ const deleteSubscription = async (req, res) => {
     const { subscriberID, subscribedToID } = req.params;
 
     // Find and delete the subscription by ID
-    const deletedSubscription = await Subscription.findByIdAndDelete(subscriberID, subscribedToID);
+    const deletedSubscription = await Subscription.findOneAndDelete({subscriberID, subscribedToID});
 
     if (!deletedSubscription) {
       return res.status(404).json({ message: 'Subscription not found',success:false });

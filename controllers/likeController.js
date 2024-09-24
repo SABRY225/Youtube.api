@@ -40,16 +40,17 @@ const getLikes = async (req, res) => {
 // Delete a like/dislike by ID
 const deleteLike = async (req, res) => {
   try {
+    const userId=req.userId
     const { id } = req.params;
 
     // Find and delete the Like by ID
-    const deletedLike = await Like.findByIdAndDelete(id);
+    const deletedLike = await Like.findOneAndDelete({videoId:id,userId});
 
     if (!deletedLike) {
-      return res.status(404).json({ message: 'Like/Dislike not found',success:false  });
+      return res.status(404).json({ message: 'Like not found',success:false  });
     }
 
-    res.status(200).json({ message: 'Like/Dislike deleted successfully' ,success:true });
+    res.status(200).json({ message: 'Like deleted successfully' ,success:true });
   } catch (error) {
     res.status(500).json({ message: error.message ,success:false  });
   }
@@ -59,11 +60,11 @@ const checkLike =async (req,res)=>{
   try {
     const userId=req.userId
     const { videoId } = req.params;
-    const existingLike = await Like.find({ userId, videoId });
-    if (existingLike.length) {
+    const existingLike = await Like.findOne({ userId, videoId });
+    if (existingLike) {
       return res.status(200).json({Type:existingLike.Type});
     }else{
-      return res.status(200).json({Type:false});
+      return res.status(200).json({Type:'NoLike'});
     }
   } catch (error) {
      res.status(500).json({ message: error.message ,success:false });

@@ -4,12 +4,14 @@ const Comment = require('../models/commentModel');
 const getComments = async (req, res) => {
     const { videoId } = req.params;
     try {
-        let comments = await Comment.find({ videoId });
+        let comments = await Comment.find({ videoId }).populate('userId');
         const counts=await Comment.countDocuments()
         comments = comments.map(comment=>({
             id:comment._id,
             content:comment.content,
-            userId:comment.userId
+            userId:comment.userId._id,
+            userName:comment.userId.userName,
+            profilePicture:comment.userId.profilePicture
         }))
         res.status(200).json({comments,counts});
     } catch (error) {

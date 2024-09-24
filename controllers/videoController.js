@@ -55,11 +55,11 @@ const getVideo = async (req, res) => {
             id: video._id,
             title: video.title,
             videoUrl: video.videoUrl,
-            backImgVideoUrl: video.backImgVideoUrl,
             description: video.description,
             views: video.views,
             channelId: video.userId._id,
             channelName: video.userId.userName,
+            channelImg: video.userId.profilePicture,
             categoryId: video.categoryId._id,
             categoryName: video.categoryId.name,
             countLike

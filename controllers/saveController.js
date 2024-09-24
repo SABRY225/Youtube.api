@@ -3,7 +3,9 @@ const SaveVideo = require('../models/saveVideoModel');
 
 const getSaveVideos = async (req, res) => {
     try {
-        let savedVideos = await SaveVideo.find({ userId: req.userId }).populate('videoId').populate('userId');
+        let savedVideos = await SaveVideo.find({ userId: req.userId })
+        .populate('videoId')
+        .populate('userId');
         savedVideos=savedVideos.map(video=>({
             VideoId:video.videoId._id,
             backImgVideoUrl:video.videoId.backImgVideoUrl,
@@ -75,35 +77,50 @@ const savePlaylist = async (req, res) => {
 const deleteSavePlaylist = async (req, res) => {
     try {
         const { playlistId } = req.params;
-        await SavePlaylist.deleteOne({ userId: req.user.id, playlistId });
+        await SavePlaylist.deleteOne({ userId: req.userId, playlistId });
         return res.status(200).json({ message: 'Playlist removed from saved list',success:true });
     } catch (error) {
         res.status(500).json({ message: 'Failed to delete saved playlist', success:false });
     }
 };
-
 const saveVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
-        const checkSave= await SaveVideo.findOne({videoId,userId: req.userId});
-        if (checkSave) {
-            return res.status(400).json({ message: `Video has already Saved.`,success:false });
+
+        // Check if videoId is provided
+        if (!videoId) {
+            return res.status(400).json({ message: "Video ID is required", success: false });
         }
+
+        // Check if the video has already been saved by the user
+        const checkSave = await SaveVideo.findOne({ videoId, userId: req.userId });
+        if (checkSave) {
+            return res.status(400).json({ message: "Video has already been saved", success: false });
+        }
+
+        // Create and save the new saved video
         const newSaveVideo = new SaveVideo({
             userId: req.userId,
             videoId
         });
         await newSaveVideo.save();
-        return res.status(200).json({ message: 'Save video successfully', success:true  });
+
+        return res.status(200).json({ message: "Video saved successfully", success: true });
     } catch (error) {
-        res.status(500).json({ message: error.message, success:false });
+        if (error.name === 'ValidationError') {
+            // Handle validation errors specifically
+            return res.status(400).json({ message: `Validation Error: ${error.message}`, success: false });
+        }
+        // Fallback for other errors
+        return res.status(500).json({ message: "Server Error: Something went wrong", success: false });
     }
 };
+
 
 const deleteSaveVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
-        await SaveVideo.deleteOne({ userId: req.user.id, videoId });
+        await SaveVideo.deleteOne({ userId: req.userId, videoId });
         res.status(200).json({ message: 'Video removed from saved list',success:true });
     } catch (error) {
         res.status(500).json({ message: 'Failed to delete saved video', success:false });
@@ -116,9 +133,8 @@ const checkSaveVideo = async (req, res) => {
       const { videoId } = req.params;
   
       // Search for existing saved videos by userId and videoId
-      const existingSave = await SaveVideo.find({ userId, videoId });
-  
-      if (existingSave.length) {
+      const existingSave = await SaveVideo.findOne({ userId, videoId });
+      if (existingSave) {
         return res.status(200).json({ status: 'saved' });
       } else {
         return res.status(200).json({ status: 'unsaved' });
@@ -135,9 +151,9 @@ const checkSaveVideo = async (req, res) => {
       const { playlistId } = req.params;
   
       // Search for existing saved videos by userId and playlistId
-      const existingSave = await SavePlaylist.find({ userId, playlistId });
-  
-      if (existingSave.length) {
+      const existingSave = await SavePlaylist.findOne({ userId, playlistId });
+      
+      if (existingSave) {
         return res.status(200).json({ status: 'saved' });
       } else {
         return res.status(200).json({ status: 'unsaved' });

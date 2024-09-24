@@ -43,7 +43,7 @@ const getPlaylistsByImgVideo = async (req, res) => {
 const getPlaylist = async (req, res) => {
     const { playlistId } = req.params;
     try {
-        const playlist = await Playlist.findById(playlistId).populate('videosId');
+        const playlist = await Playlist.findById(playlistId).populate('videosId').populate('userId');
         if (!playlist) {
             return res.status(404).json({ message: 'Playlist not found' });
         }
@@ -55,7 +55,9 @@ const getPlaylist = async (req, res) => {
                 views:video.views,
                 backImgVideoUrl:video.backImgVideoUrl,
                 title:video.title
-            }))
+            })),
+             nameUser:playlist.userId.userName,
+             profilePicture:playlist.userId.profilePicture,
         });
 
     } catch (error) {
