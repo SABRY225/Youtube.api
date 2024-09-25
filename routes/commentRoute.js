@@ -20,7 +20,7 @@ const isAuth = require('../middleware/auth');
  *       200:
  *         description: The list of categories
  */
-router.get('/:videoId', getComments);
+router.get('/:videoId', isAuth,getComments);
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ router.get('/:videoId', getComments);
  *       200:
  *         description: Returns detailes of Category
  */
-router.get('/:commentId', getComment);
+router.get('/:commentId',isAuth, getComment);
 
 /**
  * @swagger

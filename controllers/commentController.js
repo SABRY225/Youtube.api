@@ -3,9 +3,10 @@ const Comment = require('../models/commentModel');
 // Get all comments for a specific video
 const getComments = async (req, res) => {
     const { videoId } = req.params;
+    const userId = req.userId
     try {
-        let comments = await Comment.find({ videoId }).populate('userId');
-        const counts=await Comment.countDocuments()
+        let comments = await Comment.find({ videoId  }).populate('userId');
+        const counts=await Comment.countDocuments({ videoId, userId })
         comments = comments.map(comment=>({
             id:comment._id,
             content:comment.content,
