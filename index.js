@@ -6,23 +6,10 @@ const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 
 const { app, server } = require('./Socket/socket');
-const allowedOrigins = [process.env.PORT2, process.env.PORT3];
 
-const corsOptions = {
-    origin: (origin, callback) => {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    optionsSuccessStatus: 200,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ['Content-Type', 'Authorization'],
-};
 require('dotenv').config();
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 // Connect Database
 connectDB();
 
@@ -48,5 +35,8 @@ app.use('/api/like', require('./routes/likeRoute'));
 app.use('/api/save', require('./routes/saveRoute'));
 app.use('/api/search', require('./routes/searchRoute'));
 
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'test, this is your API!' });
+  });
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
